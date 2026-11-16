@@ -72,7 +72,6 @@ Each attack scenario has its own documentation folder containing:
 - Relevant Windows Event IDs, where applicable.
 - Screenshots of attack execution and monitoring evidence.
 
-**Browse all scenarios:** [02-Attack-Scenarios](02-Attack-Scenarios/)
 
 ## Investigation Approach
 
@@ -98,8 +97,6 @@ The project provided hands-on experience with:
 - Authentication and persistence-related activity.
 - MITRE ATT&CK mapping.
 - Wazuh Active Response.
-
-**Read more:** [03-Key-Learnings](03-Key-Learnings/README.md)
 
 ## Tools & Technologies
 
