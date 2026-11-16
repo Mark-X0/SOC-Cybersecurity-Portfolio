@@ -42,15 +42,3 @@ The detection was verified through the following evidence:
 - Suricata detection alert.
 - Corresponding alert visibility in the Wazuh Dashboard.
 
-## 6. Screenshots
-
-### Attack Execution — Kali Linux
-
-_Add Kali Linux screenshot showing the Nmap command and scan results._ 
-
-
-
-
-### Detection Evidence — Wazuh Dashboard
-
-_Add Wazuh screenshot showing the corresponding alert and event details._
