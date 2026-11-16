@@ -6,7 +6,7 @@ The SOC home lab consists of three virtual machines operating within an isolated
 
 Each machine has a specific role in the attack simulation and security monitoring process.
 
-## 2. Lab Components
+## 2. Lab Components 
 
 ### 1. Kali Linux – Attacker Machine
 
