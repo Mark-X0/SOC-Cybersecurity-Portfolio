@@ -32,6 +32,11 @@ Security Components:
 - Advanced Audit Policies
 - Windows Security Event Logging
 - PowerShell Script Block Logging
+- ## Wazuh Agent
+
+Wazuh Agent is installed and connected to the Wazuh Manager,
+forwarding Windows Security Events and Sysmon telemetry
+for centralized monitoring and investigation.
 
 ### 3. Ubuntu Server 22.04 – SOC Monitoring Machine
 
@@ -45,6 +50,11 @@ Components:
 - Suricata IDS
 - auditd
 - iptables
+- ### Wazuh Manager
+
+Receives and analyzes security events forwarded by the
+Windows Server Wazuh Agent and displays generated alerts
+through the Wazuh Dashboard.
 
 ## 3. Network Architecture
 
