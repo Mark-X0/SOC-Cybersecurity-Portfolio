@@ -11,7 +11,7 @@ Rather than focusing only on theoretical knowledge, the project follows an attac
 - Monitoring endpoint, network, and authentication activities.
 - Collecting and analyzing security events.
 - Investigating generated alerts through Wazuh.
-- Understanding detection mechanisms and their relevance to SOC operations.
+- Understanding detection mechanisms and their relevance to SOC operations. 
 - Exploring automated incident response capabilities.
 
 The environment consists of three virtual machines working together:
