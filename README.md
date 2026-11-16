@@ -1,146 +1,118 @@
-# SOC Home Lab: Attack Simulation, Threat Detection & Incident Response
+# SOC Home Lab: Attack Simulation, Detection & Investigation
 
-## 1. Project Overview
-This project presents a self-built Security Operations Center (SOC) home lab designed to simulate real-world attack techniques, monitor malicious activities, and investigate security alerts through a centralized SIEM environment.
+A hands-on Blue Team project focused on simulating common attack techniques, monitoring security events, and investigating detection results using Wazuh, Suricata, Sysmon, and Windows Security Auditing.
 
-The lab was built to gain practical, hands-on experience in defensive cybersecurity by simulating different attack scenarios against a controlled Active Directory environment and analyzing how these activities are detected and recorded across multiple security monitoring tools.
+## Project Overview
 
-Rather than focusing only on theoretical knowledge, the project follows an attack-to-detection approach:
+This project demonstrates a self-built SOC home lab designed to practice security monitoring and attack detection in an isolated virtual environment.
 
-- Simulating realistic attack techniques in an isolated environment.
-- Monitoring endpoint, network, and authentication activities.
-- Collecting and analyzing security events.
-- Investigating generated alerts through Wazuh.
-- Understanding detection mechanisms and their relevance to SOC operations. 
-- Exploring automated incident response capabilities.
+The lab consists of three virtual machines:
 
-The environment consists of three virtual machines working together:
+- **Kali Linux:** Attacker machine used to simulate selected attack techniques.
+- **Windows Server 2019:** Active Directory Domain Controller and monitored target.
+- **Ubuntu Server 22.04:** SOC monitoring server running Wazuh Manager, Wazuh Dashboard, Suricata IDS, and auditd.
 
-- **Kali Linux:** Used to simulate attacks and adversary techniques.
-- **Windows Server 2019:** Configured as an Active Directory Domain Controller and used as the primary target.
-- **Ubuntu Server 22.04:** Hosts the SOC monitoring infrastructure, including Wazuh Manager, Wazuh Dashboard, Suricata, and auditd.
+The environment provides visibility across network traffic, Windows endpoint activity, and Active Directory security events.
 
-The project covers multiple stages of the attack lifecycle, including reconnaissance, credential access, lateral movement, persistence, and defense evasion.
+## Project Objectives
 
-## 2. Project Objectives
+- Build a multi-machine SOC home lab.
+- Simulate common attack techniques in a controlled environment.
+- Monitor Windows Security events and Sysmon telemetry.
+- Detect suspicious network activity using Suricata.
+- Centralize security monitoring through Wazuh.
+- Investigate alerts and correlate available event details.
+- Explore automated response to suspicious authentication activity.
+- Map attack scenarios to MITRE ATT&CK.
 
-The main objectives of this lab are:
+## Lab Architecture
 
-- Build a practical and isolated SOC monitoring environment.
-- Understand how different attack techniques generate security events.
-- Gain hands-on experience with SIEM monitoring and alert investigation.
-- Analyze Windows Security Events and Sysmon telemetry.
-- Implement network-based threat detection using Suricata.
-- Explore automated incident response using Wazuh Active Response.
-- Map simulated attack techniques to the MITRE ATT&CK framework.
-- Develop practical investigation and threat detection skills from a Blue Team perspective.
-
-## 3. Lab Architecture
-
-The lab consists of three virtual machines connected through an isolated internal virtual network.
-
-### Attacker Machine
-**Operating System:** Kali Linux
-
-Tools:
-- Nmap
-- Hydra
-- Impacket
-- Evil-WinRM
-
-### Target Machine
-**Operating System:** Windows Server 2019
-
-Configuration:
-- Active Directory Domain Services
-- Domain Controller configuration
-- Sysmon
-- Advanced Windows Audit Policies
-- Windows Security Event Logging
-- PowerShell Script Block Logging
-
-### SOC Monitoring Machine
-**Operating System:** Ubuntu Server 22.04
-
-Components:
-- Wazuh Manager
-- Wazuh Dashboard
-- Suricata IDS
-- auditd
-- iptables (for firewall-based response)
-
-## 4. Security Monitoring & Detection Stack
-
-The lab combines multiple monitoring sources to provide visibility across different layers of the environment.
-
-| Component | Purpose |
-|---|---|
-| Wazuh | Centralized security monitoring, alerting, and event analysis |
-| Suricata | Network traffic inspection and intrusion detection |
-| Sysmon | Detailed Windows endpoint activity monitoring |
-| Windows Security Auditing | Authentication, account management, and system activity monitoring |
-| auditd | Linux system auditing |
-
-## 5. Attack Scenarios
-
-The following attack scenarios were simulated and investigated as part of this project.
-
-| # | Attack Scenario | Detection Focus |
+| Machine | Operating System | Role |
 |---|---|---|
-| 01 | Reconnaissance – Port Scanning | Network-based detection |
-| 02 | SSH Brute Force | Authentication failures and automated response |
-| 03 | RDP Brute Force | Windows failed logon events |
-| 04 | Kerberoasting | Kerberos service ticket requests |
-| 05 | Lateral Movement | Remote authentication through WinRM |
-| 06 | Obfuscated PowerShell Execution | Script execution and obfuscation |
-| 07 | Persistence via Scheduled Task | Scheduled task creation |
-| 08 | Defense Evasion – Clearing Event Logs | Security log tampering |
-| 09 | Persistence via Backdoor Account | Account creation and privilege assignment |
+| Attacker | Kali Linux | Attack simulation |
+| Target | Windows Server 2019 | Active Directory and endpoint monitoring |
+| SOC Server | Ubuntu Server 22.04 | Centralized monitoring and detection |
 
-Each scenario includes its attack overview, simulation details, relevant security events, Wazuh detection evidence, and technical analysis.
+### Monitoring Stack
 
-## 6. Investigation Methodology
+- Wazuh Manager & Dashboard
+- Wazuh Agent
+- Suricata IDS
+- Sysmon
+- Windows Advanced Audit Policies
+- PowerShell Script Block Logging
+- auditd
 
-Each attack scenario follows a structured investigation workflow:
+**Architecture documentation:** [01-Lab-Architecture](01-Lab-Architecture/README.md)
 
-1. **Attack Simulation:** Execute the selected attack technique in the isolated lab.
-2. **Event Generation:** Observe the resulting endpoint or network activity.
-3. **Detection:** Identify the relevant alerts and security events.
-4. **Alert Investigation:** Examine event details, timestamps, rule information, and affected systems.
-5. **Analysis:** Understand why the activity is suspicious and how it relates to the attack technique.
-6. **Response:** Document the response mechanism where applicable.
+## Attack Scenarios
 
-## 7. Key Learning Outcomes
+The following scenarios were simulated and investigated in the lab.
 
-Through building and testing this environment, the project provides practical exposure to:
+| # | Attack Scenario | MITRE ATT&CK Technique |
+|---|---|---|
+| 01 | Reconnaissance — Port Scanning | T1595 — Active Scanning |
+| 02 | SSH Brute Force | T1110.001 — Password Guessing |
+| 03 | RDP Brute Force | T1110.001 — Password Guessing |
+| 04 | Kerberoasting | T1558.003 — Kerberoasting |
+| 05 | Lateral Movement via WinRM | T1021.006 — Windows Remote Management |
+| 06 | Obfuscated PowerShell Execution | T1027 — Obfuscated Files or Information / T1059.001 — PowerShell |
+| 07 | Scheduled Task Persistence | T1053.005 — Scheduled Task |
+| 08 | Windows Event Log Clearing | T1070.001 — Clear Windows Event Logs |
+| 09 | Backdoor Account Creation | T1136.001 — Create Account: Local Account |
 
-- SIEM monitoring and security alert investigation.
-- Network and endpoint threat detection.
-- Windows Event Log analysis.
+## Attack Documentation & Evidence
+
+Each attack scenario has its own documentation folder containing:
+
+- Attack overview and objective.
+- MITRE ATT&CK mapping.
+- Simulation commands and explanations.
+- Detection and investigation notes.
+- Relevant Windows Event IDs, where applicable.
+- Screenshots of attack execution and monitoring evidence.
+
+**Browse all scenarios:** [02-Attack-Scenarios](02-Attack-Scenarios/)
+
+## Investigation Approach
+
+The general investigation workflow used throughout the project:
+
+1. Simulate an attack in the isolated lab.
+2. Identify the relevant network or endpoint activity.
+3. Review generated security events and telemetry.
+4. Investigate the corresponding Wazuh alerts.
+5. Examine timestamps, accounts, source addresses, and event details when available.
+6. Document the observed activity and supporting evidence.
+
+## Key Learnings
+
+The project provided hands-on experience with:
+
+- Network-based threat detection.
+- Windows Security event analysis.
+- Sysmon endpoint monitoring.
 - Active Directory security monitoring.
-- MITRE ATT&CK technique mapping.
-- Authentication attack detection.
-- Persistence and lateral movement investigation.
-- Automated incident response concepts.
+- Wazuh alert investigation.
+- Suricata IDS rule-based detection.
+- Authentication and persistence-related activity.
+- MITRE ATT&CK mapping.
+- Wazuh Active Response.
 
-## 8. Tools & Technologies
+**Read more:** [03-Key-Learnings](03-Key-Learnings/README.md)
 
-**SIEM & Monitoring:** Wazuh, Wazuh Dashboard
+## Tools & Technologies
 
-**Network Security:** Suricata, Nmap
+`Wazuh` `Suricata` `Sysmon` `Windows Server 2019` `Ubuntu Server 22.04` `Kali Linux` `Nmap` `Hydra` `Impacket` `Evil-WinRM` `Active Directory` `auditd` `MITRE ATT&CK`
 
-**Endpoint Monitoring:** Sysmon, Windows Security Auditing, auditd
+## Disclaimer
 
-**Attack Simulation:** Kali Linux, Hydra, Impacket, Evil-WinRM
+This project was developed for educational and defensive security purposes.
 
-**Operating Systems:** Windows Server 2019, Ubuntu Server 22.04, Kali Linux
+All attack simulations were performed within an isolated virtual lab environment. No production systems or unauthorized external targets were involved.
 
-**Framework:** MITRE ATT&CK
+Private IP addresses, passwords, and sensitive information should be excluded from published evidence.
 
-## 9. Disclaimer
+---
 
-This project was developed exclusively for educational and defensive cybersecurity purposes.
-
-All attack simulations were performed within an isolated virtual lab environment under controlled conditions. No external systems or unauthorized networks were targeted.
-
-Sensitive information, credentials, and identifying network details should be excluded or redacted from publicly shared evidence.
+**Focus:** Blue Team | SOC Operations | Security Monitoring | Threat Detection | Incident Investigation
