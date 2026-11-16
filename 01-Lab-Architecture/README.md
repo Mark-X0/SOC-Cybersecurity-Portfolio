@@ -1,95 +1,147 @@
-# SOC Home Lab Architecture
+# SOC Home Lab — Architecture & Environment
 
-## 1. Environment Overview
+## 1. Overview
 
-The SOC home lab consists of three virtual machines operating within an isolated internal network.
+This project uses a virtualized SOC home lab to simulate attack scenarios and monitor suspicious activities through centralized security monitoring.
 
-Each machine has a specific role in the attack simulation and security monitoring process.
+The environment consists of three virtual machines connected through an isolated internal network.
 
-## 2. Lab Components 
+The main objective is to generate attack activity from a dedicated attacker machine, monitor the target system and network traffic, and investigate the resulting security events through Wazuh.
 
-### 1. Kali Linux – Attacker Machine
+## 2. Lab Components
+
+### 2.1 Attacker Machine — Kali Linux
 
 **Role:** Attack Simulation
 
-Used to simulate adversary techniques against the target environment.
+Kali Linux is used to simulate selected attack techniques against the lab environment.
 
-Tools:
-- Nmap
-- Hydra
-- Impacket
-- Evil-WinRM
+Tools used include:
 
-### 2. Windows Server 2019 – Target Machine
+- Nmap — Network reconnaissance and port scanning.
+- Hydra — Authentication attack simulation.
+- Impacket — Active Directory and Kerberos-related testing.
+- Evil-WinRM — Windows Remote Management session testing.
 
-**Role:** Active Directory Domain Controller
+### 2.2 Target Machine — Windows Server 2019
 
-Configured to provide an enterprise-like Windows environment for testing security monitoring and attack detection.
+**Role:** Target System and Active Directory Environment
 
-Security Components:
-- Active Directory Domain Services
-- Sysmon
-- Advanced Audit Policies
-- Windows Security Event Logging
-- PowerShell Script Block Logging
-- ## Wazuh Agent
+Windows Server 2019 was configured as an Active Directory Domain Controller and used as the primary target for the simulated attacks.
 
-Wazuh Agent is installed and connected to the Wazuh Manager,
-forwarding Windows Security Events and Sysmon telemetry
-for centralized monitoring and investigation.
+Security monitoring components:
 
-### 3. Ubuntu Server 22.04 – SOC Monitoring Machine
+- Wazuh Agent — Forwards collected security events to the Wazuh Manager.
+- Sysmon — Provides additional endpoint telemetry.
+- Windows Advanced Audit Policies — Enables auditing of relevant security activities.
+- PowerShell Script Block Logging — Records PowerShell script-block activity.
+
+The monitored activities include authentication attempts, account management, Kerberos requests, scheduled task creation, PowerShell execution, and security log manipulation.
+
+### 2.3 SOC Monitoring Machine — Ubuntu Server 22.04
 
 **Role:** Centralized Security Monitoring
 
-Hosts the security monitoring and detection infrastructure.
+Ubuntu Server hosts the SOC monitoring components.
 
-Components:
-- Wazuh Manager
-- Wazuh Dashboard
-- Suricata IDS
-- auditd
-- iptables
-- ### Wazuh Manager
+Tools and services:
 
-Receives and analyzes security events forwarded by the
-Windows Server Wazuh Agent and displays generated alerts
-through the Wazuh Dashboard.
+- Wazuh Manager — Receives and analyzes security events from monitored endpoints.
+- Wazuh Dashboard — Provides a centralized interface for alert review and investigation.
+- Suricata IDS — Monitors network traffic and generates intrusion detection alerts.
+- auditd — Provides Linux audit monitoring capabilities.
 
 ## 3. Network Architecture
 
 All three virtual machines are connected through an isolated internal virtual network.
 
-This setup allows controlled attack simulation while keeping the lab separated from external networks.
+This allows attack simulations and monitoring activities to take place within a controlled lab environment.
 
-### Environment Communication
+### Communication Flow
 
-- Kali Linux generates attack traffic targeting the lab machines.
-- Windows Server generates security events related to authentication, system activity, and Active Directory operations.
-- Suricata monitors network traffic for suspicious patterns.
-- Wazuh provides centralized security event monitoring and alert investigation.
-- Ubuntu hosts the monitoring and response components.
+```text
+             Kali Linux
+           (Attacker VM)
+                 |
+                 | Simulated Attacks
+                 v
+        Windows Server 2019
+       (Active Directory DC)
+                 |
+        +--------+---------+
+        |                  |
+        v                  v
+   Wazuh Agent           Sysmon
+        |
+        | Security Events
+        v
+       Ubuntu Server 22.04
+        |
+        v
+    Wazuh Manager
+        |
+        v
+    Wazuh Dashboard
 
-## 4. Monitoring Strategy
+Network Traffic
+        |
+        v
+     Suricata IDS
+        |
+        v
+  Detection Alert Integration
+        |
+        v
+    Wazuh Monitoring
+```
 
-The environment focuses on three main detection layers:
+## 4. Monitoring & Telemetry Collection
 
-| Detection Layer | Technology | Purpose |
-|---|---|---|
-| Network Monitoring | Suricata | Detect suspicious network activity |
-| Endpoint Monitoring | Sysmon | Monitor Windows system activity |
-| Security Event Monitoring | Windows Auditing | Track authentication and administrative events |
-| Linux Auditing | auditd | Monitor Linux system activity |
-| Centralized Monitoring | Wazuh | Analyze and investigate security alerts |
+### Windows Endpoint Monitoring
 
-## 5. Lab Objectives
+The Windows Server Wazuh Agent forwards relevant Windows Security events and Sysmon telemetry to the Wazuh Manager.
 
-- Simulate attacks in a controlled environment.
-- Monitor network and endpoint activities.
-- Analyze security events generated during attacks.
-- Investigate alerts through the Wazuh Dashboard.
-- Understand how multiple detection sources contribute to SOC visibility.
+This provides centralized visibility into endpoint activities.
 
-## 6. Architecture Evidence
+### Network Monitoring
 
-Screenshots and network architecture diagrams will be added here to document the actual lab configuration.
+Suricata monitors network traffic and uses configured detection rules to identify suspicious network behavior, including the simulated port-scanning activity.
+
+Suricata alerts are integrated into the Wazuh monitoring environment for centralized review.
+
+### Linux Monitoring
+
+The Ubuntu monitoring server uses auditd to provide visibility into selected Linux system activities.
+
+## 5. Monitoring Workflow
+
+The lab follows this general workflow:
+
+1. An attack technique is simulated from Kali Linux or on the Windows target, depending on the scenario.
+2. The target system or network monitoring component records relevant activity.
+3. Wazuh Agent forwards Windows telemetry to the Wazuh Manager.
+4. Suricata generates network detection alerts for matching traffic patterns.
+5. Wazuh Dashboard is used to review available alerts and event details.
+6. The collected evidence is examined to understand the simulated activity.
+
+## 6. Security Monitoring Stack
+
+| Component | Purpose |
+|---|---|
+| Wazuh Manager | Centralized event analysis and alert management |
+| Wazuh Dashboard | Security monitoring and investigation |
+| Wazuh Agent | Endpoint event collection and forwarding |
+| Suricata IDS | Network intrusion detection |
+| Sysmon | Windows endpoint telemetry |
+| Windows Audit Policies | Security event generation |
+| auditd | Linux audit monitoring |
+| Kali Linux | Attack simulation |
+
+## 7. Lab Isolation & Safety
+
+The environment was designed as an isolated virtual lab for educational and defensive security testing.
+
+- Attack simulations were performed against lab systems.
+- No production systems were targeted.
+- Private IP addresses and sensitive credentials should not be published in project screenshots.
+- Testing was conducted for monitoring, detection, and investigation purposes.
